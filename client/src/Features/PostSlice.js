@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import * as ENV from "../config";
+
 
 const initialState = {
   posts: [],
@@ -10,9 +12,11 @@ const initialState = {
 //thunkk for saving the post
 export const savePost = createAsyncThunk("posts/savePost", async (postData) => {
   try {
-    const response = await axios.post("http://localhost:3001/savePost", {
+    //const response = await axios.post("http://localhost:3001/savePost", {
+    const response = await axios.post(`${ENV.SERVER_URL}/savePost`, {
       postMsg: postData.postMsg,
       email: postData.email,
+      
     });
     const post = response.data.post;
     return post; //Return the new post to Redux
@@ -24,7 +28,8 @@ export const savePost = createAsyncThunk("posts/savePost", async (postData) => {
 //thunk for getting all the post
 export const getPosts = createAsyncThunk("post/getPosts", async () => {
   try {
-    const response = await axios.get("http://localhost:3001/getPosts");
+    //const response = await axios.get("http://localhost:3001/getPosts");
+    const response = await axios.get(`${ENV.SERVER_URL}/getPosts`);
     return response.data.posts;
     console.log(response);
   } catch (error) {
@@ -37,7 +42,8 @@ export const likePost = createAsyncThunk("posts/likePost", async (postData) => {
   try {
     //Pass along the URL the postId
     const response = await axios.put(
-      `http://localhost:3001/likePost/${postData.postId}`,
+      //`http://localhost:3001/likePost/${postData.postId}`,
+      `${ENV.SERVER_URL}/likePost/${postData.postId}`,
       {
         userId: postData.userId,
       }

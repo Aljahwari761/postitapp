@@ -4,19 +4,32 @@ import cors from "cors";
 import UserModel from "./Models/UserModel.js";
 import bcrypt from "bcrypt";
 import PostModel from "./Models/Posts.js";
+import * as ENV from "./config.js";
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
 //Database connection
+//const connectString =
+//  "mongodb+srv://66s2021:66s2021@postitcluster.ajmtxek.mongodb.net/postITDb?retryWrites=true&w=majority&appName=PostITCluster";
+
 const connectString =
-  "mongodb+srv://66s2021:66s2021@postitcluster.ajmtxek.mongodb.net/postITDb?retryWrites=true&w=majority&appName=PostITCluster";
+  `mongodb+srv://${ENV.DB_USER}:${ENV.DB_PASSWORD}@${ENV.DB_CLUSTER}/${ENV.DB_NAME}?retryWrites=true&w=majority&appName=PostITCluster`;
+
 
 mongoose.connect(connectString, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
+//Middleware
+const corsOptions = {
+  origin: ENV.CLIENT_URL, //client URL local
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true, // Enable credentials (cookies, authorization headers, etc.)
+  };
+app.use(cors(corsOptions));
 
 app.post("/registerUser", async (req, res) => {
   try {
@@ -142,6 +155,16 @@ app.put("/likePost/:postId/", async (req, res) => {
   }
 });
 
+const port = ENV.PORT || 3001;
+app.listen(port, () => {
+  console.log(`You are connected at port: ${port}`);
+});
+
+
 app.listen(3001, () => {
   console.log("You are connected");
 });
+
+
+
+  
