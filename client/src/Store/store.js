@@ -35,3 +35,4 @@ const store = configureStore({
 const persistore = persistStore(store); // Create persistore forrehydration 
 
 export { store, persistore };
+
